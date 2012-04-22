@@ -6,7 +6,7 @@
     Automatic management of todo.txt - files
 
     :copyright: (c) 2012 by Carl Modén.
-    :license: GPL, see LICENSE_FILE for more details.
+    :license: GPL v3 or later, see LICENSE_FILE for more details.
 """
 
 import os
