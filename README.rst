@@ -14,6 +14,6 @@ Todo syntax
 ***********
 
 The syntax of the todo.txt, and infact the whole concept is based on the 
-todo.txt_ format invented by by Gina Trapani
+todotxt_ format invented by by Gina Trapani
 
-.. _todo.txt http://todotxt.com/
+.. _todotxt http://todotxt.com/
