@@ -6,6 +6,7 @@ Created on 14 apr 2012
 import unittest
 from io import StringIO
 import os
+import datetime
 
 import autotodo
 
@@ -15,6 +16,8 @@ class TestItems(unittest.TestCase):
     def setUp(self):
         self.itemstring = '(A) 2012-04-15 Cut cake +birthday'
         self.item = autotodo.Item(self.itemstring)
+        self.done_item = autotodo.Item(
+            'x 2012-04-15 2012-04-15 Blow candles +birthday')
 
     def tearDown(self):
         pass
@@ -30,6 +33,18 @@ class TestItems(unittest.TestCase):
     def test_item_is_done_yepp(self):
         item = autotodo.Item('x 2015-04-15 2012-04-15 Blow candles +birthday')
         self.assertTrue(item.is_done())
+
+    def test_item_get_done_date(self):
+        done_date = self.done_item.get_done_date()
+        self.assertEqual(done_date, datetime.date(2012, 4, 15))
+
+    def test_item_get_done_date_no_date(self):
+        done_date = autotodo.Item('x do something').get_done_date()
+        self.assertEqual(done_date,
+                         datetime.date.today())
+
+    def test_item_get_done_not_done(self):
+        self.assertFalse(self.item.get_done_date())
 
 
 class TestParsing(unittest.TestCase):
@@ -85,6 +100,19 @@ class TestWriting(unittest.TestCase):
         autotodo.write(self.todofile, self.todoitems[0:1], append=False)
         self.assertEqual(self.todofile.getvalue(),
                     str(self.todoitems[0]) + '\n')
+
+
+class Test_archive(unittest.TestCase):
+    """Tests for the archive function."""
+    def setUp(self):
+        self.todoitems = [
+            autotodo.Item('x 2012-04-15 2012-04-14 Bake cake+birthday'),
+            autotodo.Item('2012-04-15 Light candles on cake +birthday')]
+
+    def test_archive(self):
+        archive = autotodo.archive(self.todoitems)
+        self.assertDictEqual(archive, {'2012-04': [self.todoitems[0]],
+                                       'current': [self.todoitems[1]]})
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

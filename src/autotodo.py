@@ -10,7 +10,10 @@
 """
 
 import os
+import re
+import datetime
 
+ISODATE_RE = re.compile(r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})')
 
 class Item(object):
 
@@ -33,6 +36,27 @@ class Item(object):
             return True
         else: return False
 
+    def get_done_date(self):
+        """Return the date the item was done.
+        
+        For a not done item it returns None. For a done item without a known
+        done date it returns the current date.
+        
+        Returns
+        -------
+        a datetime date object
+        
+        """
+        if self.is_done():
+            match = ISODATE_RE.match(self._itemlist[1])
+            if match:
+                return datetime.date(int(match.group('year')),
+                                     int(match.group('month')),
+                                     int(match.group('day')))
+            else:
+                return datetime.date.today()
+        else:
+            return None
 
 def parse(file):
     """Parse a file and return a list of Items
@@ -82,3 +106,33 @@ def write(file, todolist, append=True):
         file.write('\n')
     if not append:
         file.truncate()
+
+
+def archive(todolist):
+    """Archive don items.
+    
+    Parameter
+    ---------
+    todolist: an itarable of Items
+        The todoitems that shall be archived
+        
+    Returns
+    -------
+    a dict: 
+        A dict with the keys of the form 'YYYY-MM' (for done items and 
+        'current' (for not done items) the values are lists of Items.
+        
+    """
+    dict_of_lists = {}
+    for item in todolist:
+        done_date = item.get_done_date()
+        if done_date:
+            key = '%4d-%02d' % (done_date.year, done_date.month)
+        else:  # All non done items
+            key = 'current'
+        if key in dict_of_lists:
+            dict_of_lists[key].append(item)
+        else:
+            dict_of_lists[key] = [item]
+    print(dict_of_lists)
+    return dict_of_lists
