@@ -4,15 +4,19 @@
    contain the root `toctree` directive.
 
 Welcome to autotodotxt's documentation!
-=======================================
+#######################################
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
+   
+   introduction
+   interface
+
 
 Indices and tables
-==================
+##################
 
 * :ref:`genindex`
 * :ref:`modindex`

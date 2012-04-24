@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     autotodo.module
-    ~~~~~~~~~~~~~~
+    ###############
 
     Automatic management of todo.txt - files
 
@@ -42,10 +42,8 @@ class Item(object):
         For a not done item it returns None. For a done item without a known
         done date it returns the current date.
         
-        Returns
-        -------
-        a datetime date object
-        
+        :rtype:A datetime.date object
+        :returns: The done date
         """
         if self.is_done():
             match = ISODATE_RE.match(self._itemlist[1])
@@ -61,15 +59,11 @@ class Item(object):
 def parse(file):
     """Parse a file and return a list of Items
     
-    Parameter
-    ---------
-    file: a file like object
-        the file like to be parsed
-        
-    Returns
-    -------
-    a list of Items that the file contained
+    :param file: A file like object to be parsed
+    :returns: a list of Items object
     
+    The parse function parses a file and creates Item objects that can then
+    be furthrer processed.
     """
     todolist = []
     for line in file:
@@ -81,16 +75,12 @@ def parse(file):
 def write(file, todolist, append=True):
     """Write a todo file from a list of items.
     
-    Parameter
-    ---------
-    file: a file like object
-        The file to which the items shall be written to
-    todolist: an iterable
-        The items to be written to file
-    append: a boolean
-        If True the items will be added in the end of the file, if False the
-        file content will be overwritten.
-
+    :param file: The file to which the items shall be written to
+    :param todolist: The items to be written to file
+    :type todolist: An iterable
+    :param append: If True the items will be added in the end of the file,
+        if False the file content will be overwritten.
+    :type append: A boolean
     """
     if append:
         file.seek(0, os.SEEK_END)
@@ -109,19 +99,12 @@ def write(file, todolist, append=True):
 
 
 def archive(todolist):
-    """Archive don items.
+    """Archive done items.
     
-    Parameter
-    ---------
-    todolist: an itarable of Items
-        The todoitems that shall be archived
-        
-    Returns
-    -------
-    a dict: 
-        A dict with the keys of the form 'YYYY-MM' (for done items and 
+    :param todolist: The todoitems that shall be archived
+    :type todolist: An iteramble of Item objects
+    :returns: A dict with the keys of the form 'YYYY-MM' (for done items and
         'current' (for not done items) the values are lists of Items.
-        
     """
     dict_of_lists = {}
     for item in todolist:
