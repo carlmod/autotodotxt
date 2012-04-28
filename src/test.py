@@ -76,19 +76,6 @@ class TestWriting(unittest.TestCase):
         autotodo.write(self.todofile, self.todoitems, append=True)
         self.assertGreater(len(self.todofile.getvalue()), 100)
 
-    def test_file_write_appending_missing_last_newline(self):
-        """Check that at file not ending in a newline is properly appended
-        to."""
-        #Chops of last newline
-        self.todofile.seek(0, os.SEEK_END)
-        last_pos = self.todofile.tell()
-        self.todofile.seek(last_pos - 1)
-        self.todofile.truncate()
-        autotodo.write(self.todofile, self.todoitems, append=True)
-        self.todofile.seek(0)
-        for line in self.todofile:
-            self.assertLess(len(line), 80)
-
     def test_file_write_no_append(self):
         """Overwriting a file."""
         autotodo.write(self.todofile, self.todoitems, append=False)

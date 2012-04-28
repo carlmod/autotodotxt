@@ -85,11 +85,11 @@ def write(file, todolist, append=True):
     """
     if append:
         file.seek(0, os.SEEK_END)
-        last_pos = file.tell()
-        last_char = file.seek(last_pos - 1)
-        if not last_char == '\n':
-            file.seek(last_pos)
-            file.write('\n')
+#        last_pos = file.tell()
+#        last_char = file.seek(last_pos - 1)
+#        if not last_char == '\n':
+#            file.seek(last_pos)
+#            file.write('\n')
     else:
         file.seek(0, os.SEEK_SET)
     for item in todolist:
@@ -118,7 +118,6 @@ def archive(todolist):
             dict_of_lists[key].append(item)
         else:
             dict_of_lists[key] = [item]
-    print(dict_of_lists)
     return dict_of_lists
 
 
@@ -127,11 +126,18 @@ def main():
     
     In the current directory, opens the file todo.txt and archives done items.
     """
-    with open('todo.txt', 'r') as f:
+    with open('todo.txt', 'r', encoding='utf-8') as f:
         todolist = parse(f)
     tododict = archive(todolist)
-    with open('todo.txt', '+') as f:
+    with open('todo.txt', 'r+', encoding='utf-8') as f:
         write(f, tododict['current'], append=False)
+    del tododict['current']
+    for month, todolist in tododict.items():
+        filename = 'archive-%s.txt' % month
+        open(filename, mode='a').close()  # touch file to assure it exist.
+        with open(filename, mode='r+', encoding='utf8') as f:
+            write(f, todolist, append=True)
+
 
 if __name__ == '__main__':
     main()
