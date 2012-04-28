@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
     autotodo.module
@@ -119,3 +120,18 @@ def archive(todolist):
             dict_of_lists[key] = [item]
     print(dict_of_lists)
     return dict_of_lists
+
+
+def main():
+    """Organise the todo-list.
+    
+    In the current directory, opens the file todo.txt and archives done items.
+    """
+    with open('todo.txt', 'r') as f:
+        todolist = parse(f)
+    tododict = archive(todolist)
+    with open('todo.txt', '+') as f:
+        write(f, tododict['current'], append=False)
+
+if __name__ == '__main__':
+    main()
